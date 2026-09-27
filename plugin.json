@@ -2,16 +2,57 @@
   "$schema": "https://github.com/gregiteen/total-recall/blob/main/metadata.plugin.schema.json",
   "id": "code-quality",
   "name": "Code Quality",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "One-shot, fail-closed code-quality gates for any repository: a shared runner and report core, plus a per-repo gate list customized through the Total Recall CLI.",
   "author": "Total Recall contributors",
   "license": "MIT",
-  "use_cases": ["software-development"],
+  "use_cases": [
+    "software-development"
+  ],
+  "cli": {
+    "command": "code-quality",
+    "handler": "./cli.mjs",
+    "subcommands": [
+      {
+        "name": "report",
+        "description": "Print the latest gate report for this repository (never starts a check)"
+      },
+      {
+        "name": "gate",
+        "description": "List, add or remove this repository's gates (validated, recorded in the project vault)"
+      },
+      {
+        "name": "config",
+        "description": "Get, set, validate, check, rebuild or import the repo-layer config"
+      },
+      {
+        "name": "detect",
+        "description": "Propose gates from the repository (--apply to record them)"
+      },
+      {
+        "name": "init",
+        "description": "Create the repo-layer config from defaults, detection and prompts"
+      }
+    ]
+  },
   "skills": [
-    { "id": "code-quality", "path": "skills/code-quality", "description": "Layered skill: plugin-owned core/, repo-owned SKILL.md and config" }
+    {
+      "id": "code-quality",
+      "path": "skills/code-quality",
+      "description": "Layered skill: plugin-owned core/, repo-owned SKILL.md and config"
+    }
   ],
   "commands": [
-    { "name": "code-quality-check", "handler": "./commands/check.mjs", "description": "Run this repo's gates once and write reports/latest.json (--tier fast|full|remote, --only <id>).", "background": true },
-    { "name": "code-quality-report", "handler": "./commands/report.mjs", "description": "Read the latest gate report and whether it is still current." }
+    {
+      "name": "code-quality-check",
+      "handler": "./commands/check.mjs",
+      "description": "Run this repo's gates once and write reports/latest.json (--tier fast|full|remote, --only <id>).",
+      "background": true
+    },
+    {
+      "name": "code-quality-report",
+      "handler": "./commands/report.mjs",
+      "description": "Read the latest gate report and whether it is still current."
+    }
   ]
 }

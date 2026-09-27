@@ -15,22 +15,29 @@ One-shot, fail-closed code-quality gates for any repository. The plugin ships a 
 Requires Total Recall with layered-skill and `skill config` support, and a project brain in the target repository (`total-recall init --project`).
 
 ```bash
-total-recall skill register <path-to-this-repo>/skills/code-quality
+total-recall plugin install https://github.com/gregiteen/tr-plugin-code-quality
+total-recall skill register .agent/skills/total-recall/plugins/code-quality/skills/code-quality
 total-recall skill deploy code-quality --repo .
-total-recall skill config code-quality detect            # review the proposal
-total-recall skill config code-quality detect --apply    # or: init (prompts for missing fields)
-total-recall skill config code-quality gate add id=types tier=fast cmd='["npx","tsc","--noEmit"]' parser=tsc
-total-recall skill config code-quality check             # contract, drift, and gate-command checks
+total-recall code-quality detect            # review the proposal
+total-recall code-quality detect --apply    # or: init (prompts for missing fields)
+total-recall code-quality gate add id=types tier=fast cmd='["npx","tsc","--noEmit"]' parser=tsc
+total-recall code-quality check             # contract, drift, and gate-command checks
 ```
 
-Optional repo commands generated from this plugin:
+`total-recall code-quality` is the plugin's command. Its config verbs are the same as `total-recall skill config code-quality …`, which works without the plugin installed.
 
 ```bash
-total-recall command create code-quality --config-for-skill code-quality
-total-recall command create code-quality-check --from-plugin <path-to-this-repo>
-total-recall command create code-quality-report --from-plugin <path-to-this-repo>
 total-recall code-quality gate list
+total-recall code-quality report            # latest report; never starts a check
+total-recall code-quality report file src/  # findings for one path
+```
+
+Checks run once, as a background job. Generate a repo command for them, or run the core directly:
+
+```bash
+total-recall command create code-quality-check --from-plugin .agent/skills/total-recall/plugins/code-quality
 total-recall code-quality-check --tier full
+node .agent/skills/code-quality/core/check.mjs --tier fast
 ```
 
 A repository that already has a code-quality skill keeps its `SKILL.md`, config, hooks and notes. Deploying adds `core/`, and `total-recall skill config code-quality import` records the existing `config.json`.

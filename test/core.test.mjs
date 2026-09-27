@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { detect } from '../skills/code-quality/core/detect.mjs';
 
 const CORE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'skills', 'code-quality', 'core');
@@ -164,4 +164,26 @@ test('detect proposes gates without touching the repository', () => {
   assert.equal(python.toolchain, 'python');
   assert.deepEqual(python.checks.map((c) => c.id), ['flake8']);
   assert.deepEqual(fs.readdirSync(py).sort(), before, 'detect must not create files');
+});
+
+test('the code-quality command reads the report and refuses what it cannot do', () => {
+  const cli = pathToFileURL(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'cli.mjs')).href;
+  const invoke = (cwd, ...args) => spawnSync(process.execPath, ['--input-type=module', '-e',
+    `const { run } = await import(${JSON.stringify(cli)}); await run(['node', 'total-recall', 'code-quality', ...${JSON.stringify(args)}]);`,
+  ], { cwd, encoding: 'utf8', env: { ...process.env, HOME: home, TR_PACKAGE_ROOT: '' } });
+
+  const outside = invoke(root, 'report');
+  assert.equal(outside.status, 2);
+  assert.match(outside.stderr, /No code-quality skill core/);
+
+  makeRepo();
+  writeConfig({ checks: [{ id: 'probe', tier: 'fast', cmd: [process.execPath, '-e', 'process.exit(0)'] }] });
+  assert.equal(runCheck().status, 0);
+  const report = invoke(repo, 'report', 'count');
+  assert.equal(report.status, 0, report.stderr);
+  assert.match(report.stdout, /code-quality — javascript — 0 finding/);
+
+  const config = invoke(repo, 'gate', 'list');
+  assert.equal(config.status, 2);
+  assert.match(config.stderr, /through the total-recall CLI/);
 });
