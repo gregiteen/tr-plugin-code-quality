@@ -1,0 +1,17 @@
+{
+  "$schema": "https://github.com/gregiteen/total-recall/blob/main/metadata.plugin.schema.json",
+  "id": "code-quality",
+  "name": "Code Quality",
+  "version": "0.1.0",
+  "description": "One-shot, fail-closed code-quality gates for any repository: a shared runner and report core, plus a per-repo gate list customized through the Total Recall CLI.",
+  "author": "Total Recall contributors",
+  "license": "MIT",
+  "use_cases": ["software-development"],
+  "skills": [
+    { "id": "code-quality", "path": "skills/code-quality", "description": "Layered skill: plugin-owned core/, repo-owned SKILL.md and config" }
+  ],
+  "commands": [
+    { "name": "code-quality-check", "handler": "./commands/check.mjs", "description": "Run this repo's gates once and write reports/latest.json (--tier fast|full|remote, --only <id>).", "background": true },
+    { "name": "code-quality-report", "handler": "./commands/report.mjs", "description": "Read the latest gate report and whether it is still current." }
+  ]
+}

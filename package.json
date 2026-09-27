@@ -1,0 +1,11 @@
+{
+  "name": "tr-plugin-code-quality",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Total Recall code-quality plugin: shared gate runner core and per-repo gate configuration.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}
