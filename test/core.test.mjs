@@ -73,6 +73,24 @@ test('grep findings exit 1; a gate that scans nothing never reports clean', () =
   assert.deepEqual(codes, ['CQ-EMPTY-SCOPE', 'NO-NOCHECK']);
 });
 
+test('scope:changed with an empty diff is clean; a rule that can never match still fails', () => {
+  makeRepo();
+  spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'base'], { cwd: repo });
+  writeConfig({ checks: [
+    { id: 'going-forward', kind: 'grep-forbid', scope: 'changed', baseline: 'HEAD', ignorePaths: ['^\\.agent/'], patterns: [{ pattern: 'imageUrl', code: 'NO-URL' }] },
+  ] });
+  const clean = runCheck();
+  assert.equal(clean.status, 0, clean.stderr);
+  assert.equal(clean.report.totalFindings, 0);
+
+  writeConfig({ checks: [
+    { id: 'never', kind: 'grep-forbid', scope: 'changed', baseline: 'HEAD', extensions: ['.nothing'], patterns: [{ pattern: 'x' }] },
+  ] });
+  const misconfigured = runCheck();
+  assert.equal(misconfigured.status, 1);
+  assert.deepEqual(misconfigured.report.findings.map((f) => f.code), ['CQ-EMPTY-SCOPE']);
+});
+
 test('a tool that fails without parseable output is named in the report and exits 2', () => {
   makeRepo();
   writeConfig({ checks: [{ id: 'opaque', cmd: [process.execPath, '-e', 'console.log("boom"); process.exit(3)'] }] });

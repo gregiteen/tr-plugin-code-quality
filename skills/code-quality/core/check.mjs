@@ -515,11 +515,15 @@ function runGrepForbid(check) {
   // with ignorePaths alone would mean listing every other directory.
   const only = (check.paths || []).map((p) => new RegExp(p));
 
+  const inScope = (rel) => (!only.length || only.some((re) => re.test(rel)))
+    && exts.has(path.extname(rel)) && !ignore.some((re) => re.test(rel));
+  // The empty-scope guard asks whether this rule could EVER match a file. For
+  // scope:"changed", an empty diff is a clean result, not a misconfiguration.
+  const eligible = trackedSources(check.extensions).filter(inScope).length;
+
   let scanned = 0;
   for (const rel of grepScopeFiles(check)) {
-    if (only.length && !only.some((re) => re.test(rel))) continue;
-    if (!exts.has(path.extname(rel))) continue;
-    if (ignore.some((re) => re.test(rel))) continue;
+    if (!inScope(rel)) continue;
     let text;
     try { text = readFileSync(path.join(REPO_ROOT, rel), 'utf8'); } catch { continue; }
     scanned++;
@@ -535,7 +539,7 @@ function runGrepForbid(check) {
       }
     }
   }
-  if (scanned === 0) {
+  if (eligible === 0) {
     // Never report clean for a rule that looked at nothing — that is how a
     // misconfigured extension list turns an invariant into decoration.
     findings.push({
