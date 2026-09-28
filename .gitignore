@@ -2,3 +2,11 @@ node_modules/
 reports/
 .check.lock
 *.tmp
+.env*
+.agent/skills/total-recall/
+dist/
+*.ucw.json
+.DS_Store
+INSTRUCTIONS.md
+AGENTS.md
+GEMINI.md

@@ -1,0 +1,5 @@
+[
+  {"name": "check1", "assertion": "Must have scripts", "severity": "error"},
+  {"name": "check2", "assertion": "Must have refs", "severity": "warning"},
+  {"name": "check3", "assertion": "Must have subagents", "severity": "error"}
+]

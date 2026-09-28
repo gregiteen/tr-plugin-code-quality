@@ -1,0 +1,17 @@
+[
+  {
+    "name": "droplet-deploy",
+    "assertion": "Deploy must push directly to the droplet via rsync",
+    "severity": "error"
+  },
+  {
+    "name": "env-usage",
+    "assertion": "The agent must use the DROPLET_IP from .env",
+    "severity": "error"
+  },
+  {
+    "name": "no-actions",
+    "assertion": "Do not use GitHub actions",
+    "severity": "error"
+  }
+]

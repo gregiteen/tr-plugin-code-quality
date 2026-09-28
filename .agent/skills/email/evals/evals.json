@@ -1,0 +1,12 @@
+[
+  {
+    "name": "no-hardcoded-secrets",
+    "assertion": "The agent must never hardcode Mailcow or SMTP2GO passwords or API keys in code.",
+    "severity": "error"
+  },
+  {
+    "name": "use-env",
+    "assertion": "The agent must read email configuration dynamically from process.env.",
+    "severity": "error"
+  }
+]

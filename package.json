@@ -6,6 +6,15 @@
   "description": "Total Recall code-quality plugin: shared gate runner core and per-repo gate configuration.",
   "license": "MIT",
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "ssss": "ssss",
+    "export": "ssss export vault --profile sale --out dist/bundle.ucw.json",
+    "validate": "ssss conformance --engine"
+  },
+  "dependencies": {
+    "@gregiteen/ssss-cli": "github:gregiteen/ssss#v0.9.7"
+  },
+  "devDependencies": {
+    "total-recall-brain": "latest"
   }
 }

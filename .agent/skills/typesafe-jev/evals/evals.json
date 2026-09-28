@@ -1,0 +1,42 @@
+[
+  {
+    "name": "decision-not-generation",
+    "assertion": "Jev is used only where the feature picks a label, a yes/no or a scale position; generated text still comes from the generative model",
+    "severity": "error"
+  },
+  {
+    "name": "no-hardcoded-model",
+    "assertion": "The Jev model id is read from the repository's settings, never a string literal in application code",
+    "severity": "error"
+  },
+  {
+    "name": "key-resolution",
+    "assertion": "The key comes from the repository's existing LLM key path (per-user key with budget tracking where it exists, else a Total Recall team secret); the key is never logged or printed",
+    "severity": "error"
+  },
+  {
+    "name": "confidence-gated",
+    "assertion": "Every automatic action taken on a Jev answer checks confidence against a per-outcome threshold in code; below it the feature asks a human or falls back",
+    "severity": "error"
+  },
+  {
+    "name": "fallback-exists",
+    "assertion": "With no key, no configured model, an HTTP error, a timeout or an unreadable response, the feature behaves exactly as it did before Jev",
+    "severity": "error"
+  },
+  {
+    "name": "human-approval-kept",
+    "assertion": "Anything that messages customers, deletes data or spends money keeps its human approval step even with a confident Jev answer",
+    "severity": "error"
+  },
+  {
+    "name": "decision-recorded",
+    "assertion": "The chosen label, confidence and answering model version are recorded with the feature's result",
+    "severity": "warning"
+  },
+  {
+    "name": "tests-mock-the-call",
+    "assertion": "pytest covers high-confidence, low-confidence and failure paths with the API call monkeypatched; no test hits the network",
+    "severity": "error"
+  }
+]
