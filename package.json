@@ -12,7 +12,7 @@
     "validate": "ssss conformance --engine"
   },
   "dependencies": {
-    "@gregiteen/ssss-cli": "github:gregiteen/ssss#v0.10.0"
+    "@gregiteen/ssss-cli": "github:gregiteen/ssss#v0.10.1"
   },
   "devDependencies": {
     "total-recall-brain": "^3.31.2"
